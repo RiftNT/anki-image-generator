@@ -12,29 +12,31 @@ DECK_TARGET = "deck:" + config["deck_target"]
 KEY_FIELD = config["key_field"]
 IMAGE_FIELD = config["image_field"]
 
-def get_image_url(query):
-    MAX_ITERATIONS = 5
-    for i in range(MAX_ITERATIONS):
-        response = requests.get(
-            "https://www.bing.com/images/search",
-            params={
-                "q": query,
-            }
-        )
+def get_image_urls(query):
+    image_urls = []
 
-        soup = BeautifulSoup(response.text, "html.parser")
-        image_element = soup.find("img", class_="mimg")
+    response = requests.get(
+        "https://www.bing.com/images/search",
+        params={
+            "q": query,
+        }
+    )
+    
+    soup = BeautifulSoup(response.text, "html.parser")
+    image_elements = soup.find_all("img", class_="mimg")
+    for image_element in image_elements:
+        link_element = image_element.find_parent("a")
+        link_address = link_element["m"]
+        dictionary = json.loads(link_address)
+        turl = dictionary["turl"]
+        image_urls.append(turl)
 
-        if image_element:
-            link_element = image_element.find_parent("a")
-            link_address = link_element["m"]
-            dictionary = json.loads(link_address)
-            turl = dictionary["turl"]
-            try:
-                response = requests.get(turl, timeout=5)
-            except Exception as e:
-                continue
-            return turl
+    for image_url in image_urls:
+        try:
+            response = requests.get(image_url, timeout=5)
+        except Exception as e:
+            continue
+        return image_url
 
     return None
 
@@ -44,7 +46,7 @@ def generateImages():
     for id in ids:
         note = mw.col.get_note(id)
         if CARD_SELECTION == "override" or not note[IMAGE_FIELD]:
-            note[IMAGE_FIELD] = f'<img src="{get_image_url(note[KEY_FIELD])}" width="600">'
+            note[IMAGE_FIELD] = f'<img src="{get_image_urls(note[KEY_FIELD])}" width="600">'
             ctr = ctr + 1
         mw.col.update_note(note)
     showInfo("Notes changed: %d" % ctr)
