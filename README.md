@@ -1,4 +1,4 @@
-# anki-image-grabber
+# anki-image-generator
 This Anki addon retrieves input a word or phrase from an Anki note, 
 then searches the web for an image related to the input and displays 
 the image in a specified field of a note. The addon uses web scraping 
