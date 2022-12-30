@@ -1,16 +1,18 @@
-# anki-image-generator
-This Anki addon retrieves input a word or phrase from an Anki note, 
-then searches the web for an image related to the input and displays 
-the image in a specified field of a note. The addon uses web scraping 
-techniques to search and retrieve the images and can be used to update 
-a whole deck or a selection of notes. It is a convenient tool for quickly 
-adding images to multiple notes in bulk.
+# Anki Addon: Image Generator
+This Anki addon allows you to generate images and place them in a specified field of your Anki notes. The images are generated based on a search query, which is taken from another specified field of the notes.
 
-## Config Options
-* `card_selection` - 'override' if you want all images of the selected deck to be changed
-* `deck_target` - the target deck you want to generate images on.
-* `key_field` - the field to be used as input for searching the image
-* `image_field` - the field to output the image
+## Configuration
+Before using the addon, you need to configure the following settings in the addon configuration menu:
+
+* `card_selection`: This setting determines how the addon selects which notes to change. You can choose to either 'override' all notes, or only change the notes with empty image_field.
+* `deck_target`: This setting specifies the deck in which the addon will operate. You can either enter the name of the deck, or use a tag to specify the notes.
+* `key_field`: This setting specifies the field of the notes that will be used as the search query for generating the images.
+* `image_field`: This setting specifies the field of the notes that the generated images will be placed in.
+
+## Usage
+To use the addon, simply go to the Tools menu and click on the "Generate Images" option. The addon will then generate and place the images in the specified field of the selected notes.
 
 ## Notes
-* ***restart* Anki after changing configurations**
+* The addon uses Bing's image search service to generate the images.
+* The addon will try up to 5 times to find a valid image for each note. If it is unsuccessful, the image field will remain unchanged.
+* The addon will show a notification with the number of changed notes after it finishes running.
