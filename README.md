@@ -5,7 +5,7 @@ This Anki addon allows you to generate images and place them in a specified fiel
 Before using the addon, you need to configure the following settings in the addon configuration menu:
 
 * `card_selection`: This setting determines how the addon selects which notes to change. You can choose to either 'override' all notes, or only change the notes with empty image_field.
-* `deck_target`: This setting specifies the deck in which the addon will operate. You can either enter the name of the deck, or use a tag to specify the notes.
+* `deck_target`: This setting specifies the deck in which the addon will operate.
 * `key_field`: This setting specifies the field of the notes that will be used as the search query for generating the images.
 * `image_field`: This setting specifies the field of the notes that the generated images will be placed in.
 
