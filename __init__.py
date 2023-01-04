@@ -1,7 +1,7 @@
 import requests
 import json
 from aqt import mw
-from aqt.utils import qconnect, showInfo
+from aqt.utils import qconnect, tooltip
 from aqt.qt import *
 from bs4 import BeautifulSoup
 
@@ -43,14 +43,27 @@ def get_image_urls(query):
 def generateImages():
     ctr = 0
     ids = mw.col.find_notes(DECK_TARGET)
-    for id in ids:
+    total_notes = len(ids)
+
+    progress_bar = QProgressDialog("Generating images...", "Cancel", 0, total_notes, mw)
+    progress_bar.setWindowModality(Qt.WindowModal)
+    progress_bar.setValue(0)
+
+    for i, id in enumerate(ids):
         note = mw.col.get_note(id)
         if CARD_SELECTION == "override" or not note[IMAGE_FIELD]:
             note[IMAGE_FIELD] = f'<img src="{get_image_urls(note[KEY_FIELD])}" width="600">'
             ctr = ctr + 1
         mw.col.update_note(note)
-    showInfo("Notes changed: %d" % ctr)
+        progress_bar.setValue(i+1)  
         
-action = QAction("Generate Images ", mw)
+        if progress_bar.wasCanceled():
+            break
+        
+    progress_bar.setValue(total_notes)
+    progress_bar.close()
+    tooltip(f"Notes changed: {ctr}", parent=mw)
+        
+action = QAction("Generate Images", mw)
 qconnect(action.triggered, generateImages)
 mw.form.menuTools.addAction(action)
